@@ -1,6 +1,7 @@
 from sentence_transformers import SentenceTransformer
-
 from app.core.constants import EMBEDDING_MODEL
+
+_model = None
 
 
 class EmbeddingService:
@@ -9,16 +10,26 @@ class EmbeddingService:
     """
 
     def __init__(self):
-        self.model = SentenceTransformer(
-            EMBEDDING_MODEL
-        )
+        pass
+
+    def get_model(self):
+        global _model
+
+        if _model is None:
+            print("Loading embedding model...")
+            _model = SentenceTransformer(EMBEDDING_MODEL)
+
+        return _model
 
     def embed_text(self, text: str) -> list[float]:
+        model = self.get_model()
+
         query = (
-            "Represent this sentence for searching relevant passages: " + text
+            "Represent this sentence for searching relevant passages: "
+            + text
         )
 
-        embedding = self.model.encode(
+        embedding = model.encode(
             query,
             normalize_embeddings=True,
         )
@@ -27,10 +38,12 @@ class EmbeddingService:
 
     def embed_documents(
         self,
-        texts: list[str]
+        texts: list[str],
     ) -> list[list[float]]:
 
-        embeddings = self.model.encode(
+        model = self.get_model()
+
+        embeddings = model.encode(
             texts,
             normalize_embeddings=True,
         )
