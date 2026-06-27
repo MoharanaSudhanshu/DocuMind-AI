@@ -7,12 +7,12 @@ from app.services.retrieval_service import RetrievalService
 
 router = APIRouter()
 
-retriever = RetrievalService()
-chat_service = ChatService()
-
 
 @router.post("/", response_model=ChatResponse)
 def chat(request: ChatRequest):
+
+    retriever = RetrievalService()
+    chat_service = ChatService()
 
     context = retriever.retrieve(request.question)
 
