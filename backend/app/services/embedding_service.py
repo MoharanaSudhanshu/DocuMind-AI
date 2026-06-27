@@ -1,51 +1,43 @@
-from sentence_transformers import SentenceTransformer
-from app.core.constants import EMBEDDING_MODEL
-
-_model = None
+from google import genai
+from app.core.config import settings
 
 
 class EmbeddingService:
-    """
-    Handles local embedding generation using Hugging Face.
-    """
 
     def __init__(self):
-        pass
-
-    def get_model(self):
-        global _model
-
-        if _model is None:
-            print("Loading embedding model...")
-            _model = SentenceTransformer(EMBEDDING_MODEL)
-
-        return _model
+        self.client = genai.Client(
+            api_key=settings.GEMINI_API_KEY
+        )
 
     def embed_text(self, text: str) -> list[float]:
-        model = self.get_model()
 
         query = (
             "Represent this sentence for searching relevant passages: "
             + text
         )
 
-        embedding = model.encode(
-            query,
-            normalize_embeddings=True,
+        response = self.client.models.embed_content(
+            model="gemini-embedding-001",
+            contents=query,
         )
 
-        return embedding.tolist()
+        return response.embeddings[0].values
 
     def embed_documents(
         self,
         texts: list[str],
     ) -> list[list[float]]:
 
-        model = self.get_model()
+        embeddings = []
 
-        embeddings = model.encode(
-            texts,
-            normalize_embeddings=True,
-        )
+        for text in texts:
+            response = self.client.models.embed_content(
+                model="gemini-embedding-001",
+                contents=text,
+            )
 
-        return embeddings.tolist()
+            embeddings.append(
+                response.embeddings[0].values
+            )
+
+        return embeddings
