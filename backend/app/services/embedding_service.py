@@ -6,7 +6,7 @@ class EmbeddingService:
 
     def __init__(self):
         self.client = genai.Client(
-            api_key=settings.GEMINI_API_KEY
+            api_key=settings.GOOGLE_API_KEY
         )
 
     def embed_text(self, text: str) -> list[float]:
