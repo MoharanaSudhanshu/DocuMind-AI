@@ -1,0 +1,22 @@
+PROJECT_NAME = "DocuMind AI"
+
+API_VERSION = "v1"
+
+EMBEDDING_PROVIDER = "huggingface"
+
+EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
+EMBEDDING_DIMENSIONS = 384
+
+
+CHAT_MODEL = "gemini-2.0-flash-lite"
+CHUNK_SIZE = 800
+
+CHUNK_OVERLAP = 100
+
+TOP_K = 5
+
+MAX_UPLOAD_SIZE = 20 * 1024 * 1024
+
+SUPPORTED_EXTENSIONS = [
+    ".pdf"
+]
